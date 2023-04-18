@@ -1,15 +1,23 @@
 import React from "react";
 import "./Styles/App.css";
 
-import NotesContainer from "./Components/NotesContainer";
-import Sidebar from "./Components/Sidebar";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import HomeComponent from "./Components/HomeComponent";
+import NotesComponent from "./Components/NotesComponent";
+import Register from "./Components/Auth/Register";
+import Login from "./Components/Auth/Login";
 
 function App() {
   return (
-    <section className="container-wrapper">
-      <Sidebar />
-      <NotesContainer />
-    </section>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomeComponent />} />
+        <Route path="/notes" element={<NotesComponent />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
