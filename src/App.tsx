@@ -1,14 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./Styles/App.css";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import { auth } from "./Firebase/firebase.config";
 import HomeComponent from "./Components/HomeComponent";
 import NotesComponent from "./Components/NotesComponent";
 import Register from "./Components/Auth/Register";
 import Login from "./Components/Auth/Login";
 
 function App() {
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      console.log(user);
+    });
+  });
+
   return (
     <BrowserRouter>
       <Routes>

@@ -1,0 +1,33 @@
+.card {
+  background-color: white;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  padding: 25px;
+  border-radius: 8px;
+  margin: auto;
+  width: 50%;
+}
+
+.card-text {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  color: grey;
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  padding: 14px 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.form-control:focus {
+  outline: none;
+  border: 2px solid #4caf50;
+}
+
+@media only screen and (max-width: 768px) {
+  .card {
+    width: 90%;
+  }
+}

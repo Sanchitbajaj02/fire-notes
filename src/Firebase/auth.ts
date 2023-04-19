@@ -1,6 +1,4 @@
-import { scryptSync, randomBytes, timingSafeEqual } from "crypto";
-
-function encodePassword(password: string) {
+async function encodePassword(password: string) {
   try {
     if (typeof password !== "string") {
       throw new Error("Type mismatch: password must be a string");
@@ -10,29 +8,45 @@ function encodePassword(password: string) {
       throw new Error("Password must be between 4 and 20 characters");
     }
 
-    const salt = randomBytes(16).toString("hex");
-    const hashPassword = scryptSync(password, salt, 16).toString("hex");
+    // const salt = randomBytes(16).toString("hex");
+    // const hashPassword = scryptSync(password, salt, 16).toString("hex");
 
-    const hashedPasswordWithSalt = `${salt}:${hashPassword}`;
+    // const hashedPasswordWithSalt = `${salt}:${hashPassword}`;
 
-    return hashedPasswordWithSalt;
-  } catch (error) {
+    // return hashedPasswordWithSalt;
+
+    // const salt: string = await genSalt(10);
+    // if (salt) {
+    //   const hashedPassword: string = await hash(password, salt);
+    //   return hashedPassword;
+    // }
+  } catch (error: any) {
     console.log(error);
     return error;
   }
 }
 
-function decodePassword(password: string) {
+async function decodePassword(password: string, hashedPassword: string) {
   try {
-    const [salt, key] = password.split(":");
-    const hashBuffer = scryptSync(password, salt, 64);
+    if (typeof password !== "string") {
+      throw new Error("Type mismatch: password must be a string");
+    }
+    // const [salt, key] = password.split(":");
+    // const hashBuffer = scryptSync(password, salt, 64);
 
-    const keyBuffer = Buffer.from(key, "hex");
-    const match = timingSafeEqual(hashBuffer, keyBuffer);
+    // const keyBuffer = Buffer.from(key, "hex");
+    // const match = timingSafeEqual(hashBuffer, keyBuffer);
 
-    return match ? true : false;
-  } catch (error) {
+    // return match ? true : false;
+
+    // const match = await compare(password, hashedPassword);
+
+    // if (match) {
+    //   return true;
+    // }
+  } catch (error: any) {
     console.log(error);
+    return error;
   }
 }
 
