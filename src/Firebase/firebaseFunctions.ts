@@ -13,10 +13,16 @@ import { UserDataType, SingleNote } from "../@types/index.d";
 
 import { encodePassword, decodePassword } from "./auth";
 
-const userRegister = async (userData: UserDataType) => {
+const userRegister = async (userData: UserDataType): Promise<UserDataType> => {
   try {
+    let combinedState: UserDataType = {
+      id: "",
+      uid: "",
+      emailID: "",
+      password: "",
+    };
     if (userData?.emailID === undefined || userData?.password === undefined) {
-      throw new Error("Username is required");
+      throw new Error("Fields are required");
     }
     const signUpResult = await createUserWithEmailAndPassword(
       auth,
@@ -34,27 +40,44 @@ const userRegister = async (userData: UserDataType) => {
       }
 
       const addSnapshot = await addDoc(addDocRef, {
-        emailID: userData?.emailID,
+        emailID: signUpResult.user.email,
         password: hashPass,
         uid: signUpResult.user.uid,
       });
 
       if (addSnapshot && addSnapshot.id) {
-        return {
+        combinedState = {
           id: addSnapshot.id,
           uid: signUpResult.user.uid,
-          emailID: signUpResult.user.email,
+          emailID: signUpResult.user.email ? signUpResult.user.email : "",
         };
       }
+
+      return combinedState;
     }
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
     // IN_PROGRESS: add return after testing
+    // return error;
   }
+
+  return {
+    id: "",
+    uid: "",
+    emailID: "",
+    password: "",
+  };
 };
 
-const userLogin = async (userData: UserDataType) => {
+const userLogin = async (userData: UserDataType): Promise<UserDataType> => {
   try {
+    let combinedState: UserDataType = {
+      id: "",
+      uid: "",
+      emailID: "",
+      password: "",
+    };
+
     if (userData?.emailID === undefined || userData?.password === undefined) {
       throw new Error("Username is required");
     }
@@ -75,20 +98,28 @@ const userLogin = async (userData: UserDataType) => {
         hashedPass
       );
 
-      if (!(matchedResult instanceof Error)) {
-        if (docSnapshot && docSnapshot.exists()) {
-          return {
-            id: docSnapshot.id,
-            uid: signInResult.user.uid,
-            emailID: signInResult.user.email,
-          };
-        }
+      if (docSnapshot && docSnapshot.exists() && matchedResult) {
+        combinedState = {
+          id: docSnapshot.id,
+          uid: signInResult.user.uid,
+          emailID: signInResult.user.email ? signInResult.user.email : "",
+        };
       }
+
+      return combinedState;
     }
   } catch (error) {
     console.log(error);
     // IN_PROGRESS: add return after testing
+    // return error;
   }
+
+  return {
+    id: "",
+    uid: "",
+    emailID: "",
+    password: "",
+  };
 };
 
 const googlePopUpSignin = async () => {

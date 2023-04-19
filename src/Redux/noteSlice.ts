@@ -8,7 +8,7 @@ const initialState = {
   notes: [] as NotesState["notes"],
 };
 
-const addNote = (
+const addSingleNote = (
   state: NotesState = initialState,
   action: PayloadAction<SingleNote>
 ) => {
@@ -25,7 +25,7 @@ const addNote = (
     });
 };
 
-const deleteNote = (
+const deleteSingleNote = (
   state: NotesState = initialState,
   action: PayloadAction<string>
 ) => {
@@ -45,9 +45,13 @@ const notesSlice = createSlice({
   name: "notesslice",
   initialState,
   reducers: {
-    addNote,
-    deleteNote,
+    addNote: addSingleNote,
+    deleteNote: deleteSingleNote,
   },
 });
 
+// for dispatch
+export const { addNote, deleteNote } = notesSlice.actions;
+
+// for configureStore
 export default notesSlice.reducer;

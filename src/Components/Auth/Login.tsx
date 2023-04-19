@@ -1,8 +1,34 @@
-import React from "react";
-import { Link } from "react-router-dom";
 import "./auth.css";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { UserDataType } from "../../@types";
+import { login } from "../../Redux/authSlice";
 
 function Login(): JSX.Element {
+  const dispatch = useDispatch();
+
+  const [userData, setUserData] = useState<UserDataType>({
+    emailID: "",
+    password: "",
+  });
+
+  const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setUserData((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
+  };
+
+  const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    dispatch(login(userData));
+  };
+
   return (
     <section className="wrapper">
       <div className="home-body">
@@ -13,7 +39,7 @@ function Login(): JSX.Element {
             Please fill the details to logged into Fire Notes application.
           </p>
 
-          <form method="post">
+          <form method="post" onSubmit={submitHandler}>
             <div
               style={{
                 marginBottom: 20,
@@ -29,6 +55,7 @@ function Login(): JSX.Element {
                 placeholder="Enter email address"
                 required
                 className="form-control"
+                onChange={changeHandler}
               />
             </div>
 
@@ -47,6 +74,7 @@ function Login(): JSX.Element {
                 placeholder="Enter password"
                 required
                 className="form-control"
+                onChange={changeHandler}
               />
             </div>
 

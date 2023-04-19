@@ -1,5 +1,7 @@
 export type UserDataType = {
-  emailID?: string;
+  id?: string;
+  uid?: string;
+  emailID: string;
   password?: string;
 };
 
