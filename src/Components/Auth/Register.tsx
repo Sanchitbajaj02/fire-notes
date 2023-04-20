@@ -33,9 +33,9 @@ function Register(): JSX.Element {
       .then((res: authenticatedUser) => {
         console.log(res);
         if (res.id !== "" && res.uid !== "" && res.emailID !== "") {
-          sessionStorage.setItem("id", res.id ? res.id : "");
-          sessionStorage.setItem("uid", res.uid ? res.uid : "");
-          sessionStorage.setItem("emailID", res.emailID ? res.emailID : "");
+          localStorage.setItem("id", res.id ? res.id : "");
+          localStorage.setItem("uid", res.uid ? res.uid : "");
+          localStorage.setItem("emailID", res.emailID ? res.emailID : "");
 
           dispatch(authUser(res));
           navigate("/notes");

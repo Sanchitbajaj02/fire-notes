@@ -5,9 +5,9 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 
 import { authenticatedUser } from "../@types/index.d";
 
-const idSession = sessionStorage.getItem("id");
-const uidSession = sessionStorage.getItem("uid");
-const emailIDSession = sessionStorage.getItem("emailID");
+const idSession = localStorage.getItem("id");
+const uidSession = localStorage.getItem("uid");
+const emailIDSession = localStorage.getItem("emailID");
 
 const initialState: authenticatedUser = {
   id: idSession || "",
