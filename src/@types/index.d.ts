@@ -10,13 +10,14 @@ export type authenticatedUser = {
 };
 
 export type SingleNote = {
-  id: string;
+  id?: string;
   uid: string;
   noteTitle: string;
   noteDescription: string;
+  color: string;
   createdAt: string;
 };
 
-export interface NotesState {
+export type NotesState = {
   notes: SingleNote[];
-}
+};

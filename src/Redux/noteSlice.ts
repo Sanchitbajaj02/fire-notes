@@ -1,57 +1,46 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { addNoteToDB, deleteNoteFromDB } from "../Firebase/firebaseFunctions";
 
 import { SingleNote, NotesState } from "../@types/index";
 
-const initialState = {
-  notes: [] as NotesState["notes"],
-};
-
-const addSingleNote = (
-  state: NotesState = initialState,
-  action: PayloadAction<SingleNote>
-) => {
-  const tempNote = action.payload;
-
-  addNoteToDB(tempNote)
-    .then((resp: any) => {
-      console.log(resp);
-
-      state.notes.push(resp);
-    })
-    .catch((err: Error) => {
-      console.log(err);
-    });
-};
-
-const deleteSingleNote = (
-  state: NotesState = initialState,
-  action: PayloadAction<string>
-) => {
-  const tempNoteID = action.payload;
-
-  deleteNoteFromDB(tempNoteID)
-    .then((resp) => {
-      console.log(resp);
-      state.notes = state.notes.filter((note) => note.id !== tempNoteID);
-    })
-    .catch((err: Error) => {
-      console.log(err);
-    });
+const initialState: NotesState = {
+  notes: [],
 };
 
 const notesSlice = createSlice({
   name: "notesslice",
   initialState,
   reducers: {
-    addNote: addSingleNote,
-    deleteNote: deleteSingleNote,
+    getNotes(_, action: PayloadAction<SingleNote[]>) {
+      return {
+        notes: action.payload,
+      };
+    },
+    addNote(
+      state: NotesState = initialState,
+      action: PayloadAction<SingleNote>
+    ) {
+      state.notes.push(action.payload);
+      return state;
+    },
+    deleteNote(
+      state: NotesState = initialState,
+      action: PayloadAction<SingleNote>
+    ) {
+      state.notes.filter((note) => note.uid !== action.payload.uid);
+      return state;
+    },
+    updateNote(
+      state: NotesState = initialState,
+      action: PayloadAction<SingleNote>
+    ) {
+      // write the state logic to replace the note in the state where it matches with the action.payload.uid
+    },
   },
 });
 
 // for dispatch
-export const { addNote, deleteNote } = notesSlice.actions;
+export const { getNotes, addNote, deleteNote } = notesSlice.actions;
 
 // for configureStore
 export default notesSlice.reducer;

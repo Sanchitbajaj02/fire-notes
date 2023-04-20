@@ -28,6 +28,7 @@
   display: flex;
   flex-direction: column;
   gap: 40px;
+  width: 20%;
 }
 
 .sidebar img {
@@ -35,78 +36,23 @@
   cursor: pointer;
 }
 
-.sidebar_list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-items: center;
-  height: 0;
-  transition: 300ms;
-}
-
-.sidebar_list_active {
-  height: 300px;
-}
-
-.sidebar_list_item {
-  border-radius: 50%;
-  height: 24px;
-  width: 24px;
-  list-style: none;
-}
-
-/* notes container */
-.note-container {
-  height: 100%;
-}
-
-.note-container h2 {
-  margin-bottom: 20px;
-}
-
-.note-container_notes {
-  height: 90%;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  overflow-y: scroll;
-}
-
-/* single note */
-.note {
-  padding: 25px;
-  height: 280px;
-  width: 260px;
-  display: flex;
-  flex-direction: column;
-  background-color: blueviolet;
-  border-radius: 30px;
-}
-
-.note_text {
-  flex: 1;
-  resize: none;
-  background-color: transparent;
-  font-size: 1rem;
-  line-height: 1.875rem;
-  outline: none;
-  border: none;
-}
-
-.note_footer {
+.sidebar-list {
+  margin-top: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.note_footer img {
-  cursor: pointer;
-  opacity: 0;
-  transition: 300ms;
+.sidebar-list-item {
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  list-style: none;
 }
 
-.note:hover .note_footer img {
-  opacity: 1;
+.sidebar-list-item:hover {
+  cursor: pointer;
+  border: 1px solid black;
 }
 
 /* home page css start here */
@@ -150,3 +96,13 @@
   text-decoration: none;
 }
 /* home page css end here */
+
+@media only screen and (max-width: 768px) {
+  .container-wrapper {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+}

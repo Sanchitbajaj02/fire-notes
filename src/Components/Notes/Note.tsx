@@ -1,8 +1,10 @@
 import React from "react";
 
+import { SingleNote } from "../../@types/index.d";
+
 let timer: number = 500,
   timeout: any;
-function Note(props: any) {
+function Note({ note }: { note: SingleNote }) {
   const formatDate = (value: any) => {
     if (!value) return "";
 
@@ -42,24 +44,24 @@ function Note(props: any) {
   };
 
   const updateText = (text: string, id: string) => {
-    debounce(() => props.updateText(text, id));
+    // debounce(() => props.updateText(text, id));
   };
 
   return (
-    <div className="note" style={{ backgroundColor: props.note.color }}>
+    <div className="note" style={{ backgroundColor: note.color }}>
       <textarea
         className="note_text"
-        defaultValue={props.note.text}
-        onChange={(event) => updateText(event.target.value, props.note.id)}
+        defaultValue={note.noteTitle}
+        onChange={(event) => console.log("update")}
       />
       <div className="note_footer">
-        <p>{formatDate(props.note.time)}</p>
+        <p>{formatDate(note.createdAt)}</p>
         {/* <img
           src={deleteIcon}
           alt="DELETE"
           
         /> */}
-        <button onClick={() => props.deleteNote(props.note.id)}>delete</button>
+        <button onClick={() => console.log("delete")}>delete</button>
       </div>
     </div>
   );

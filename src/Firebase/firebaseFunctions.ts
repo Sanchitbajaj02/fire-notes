@@ -6,7 +6,14 @@ import {
   signOut,
 } from "firebase/auth";
 
-import { collection, doc, addDoc, getDoc, deleteDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  addDoc,
+  getDoc,
+  deleteDoc,
+  getDocs,
+} from "firebase/firestore";
 
 import { db, auth } from "./firebase.config";
 import { UserData, authenticatedUser, SingleNote } from "../@types/index.d";
@@ -134,24 +141,22 @@ const googleSignout = () => {
   return signOut(auth);
 };
 
-const addNoteToDB = async (tempNote: SingleNote) => {
+const addNoteToDB = async (tempNote: SingleNote): Promise<boolean> => {
   try {
     const docRef = collection(db, "notes");
 
     const addSnapshot = await addDoc(docRef, {
-      tempNote,
+      ...tempNote,
     });
 
     if (addSnapshot && addSnapshot.id) {
-      return {
-        ...tempNote,
-        id: addSnapshot.id,
-      };
+      return true;
     }
   } catch (error) {
     console.log(error);
     // IN_PROGRESS: add return after testing
   }
+  return false;
 };
 
 const deleteNoteFromDB = async (tempNoteID: string) => {
@@ -167,19 +172,49 @@ const deleteNoteFromDB = async (tempNoteID: string) => {
 
 const getNotesFromDBByuid = async (uid: string) => {
   try {
-    const docRef = doc(db, "notes", uid);
+    // const docRef = doc(db, "notes", uid);
 
-    const docSnapshot = await getDoc(docRef);
+    // const docSnapshot = await getDoc(docRef);
 
-    if (docSnapshot && docSnapshot.exists()) {
-      return {
-        ...docSnapshot.data(),
-      };
+    // if (docSnapshot && docSnapshot.exists()) {
+    //   console.log(docSnapshot.data());
+    //   return {
+    //     ...docSnapshot.data(),
+    //   };
+    // }
+
+    let notesArray: SingleNote[] = [];
+
+    const docRef = collection(db, "notes");
+
+    const docSnapshot = await getDocs(docRef);
+
+    if (docSnapshot && docSnapshot.docs.length > 0) {
+      docSnapshot.forEach((doc) => {
+        console.log(doc.data());
+
+        if (doc.data().uid === uid) {
+          const tempNote: SingleNote = {
+            id: doc.id,
+            uid: doc.data().uid,
+            noteTitle: doc.data().noteTitle,
+            noteDescription: doc.data().noteDescription,
+            createdAt: doc.data().createdAt,
+            color: doc.data().color,
+          };
+
+          notesArray.push(tempNote);
+        }
+      });
+
+      return notesArray;
     }
   } catch (error) {
     console.log(error);
     // IN_PROGRESS: add return after testing
   }
+
+  return [];
 };
 
 export {
