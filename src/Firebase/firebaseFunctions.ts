@@ -159,9 +159,9 @@ const addNoteToDB = async (tempNote: SingleNote): Promise<boolean> => {
   return false;
 };
 
-const deleteNoteFromDB = async (uid: string) => {
+const deleteNoteFromDB = async (id: string): Promise<boolean> => {
   try {
-    const docRef = doc(db, "notes", uid);
+    const docRef = doc(db, "notes", id);
 
     await deleteDoc(docRef);
 

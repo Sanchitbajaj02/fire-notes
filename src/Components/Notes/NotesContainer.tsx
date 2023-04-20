@@ -33,7 +33,11 @@ function NotesContainer() {
       .catch((err: Error) => {
         console.log(err);
       });
-  }, [authSelector.uid, dispatch]);
+
+    return () => {
+      console.log("NotesContainer unmounted");
+    };
+  }, []);
 
   return (
     <div className="note-container">
@@ -58,8 +62,6 @@ function NotesContainer() {
             No Notes present
           </p>
         )}
-
-        {/* <Note /> */}
       </div>
     </div>
   );

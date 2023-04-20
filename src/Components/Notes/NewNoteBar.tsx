@@ -1,12 +1,14 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router";
 import { authenticatedUser, SingleNote } from "../../@types/index.d";
 import { useSelector, useDispatch } from "react-redux";
 import { addNote } from "../../Redux/noteSlice";
-import { addNoteToDB } from "../../Firebase/firebaseFunctions";
+import { addNoteToDB, googleSignout } from "../../Firebase/firebaseFunctions";
 
 function NewNoteBar(): JSX.Element {
   const colors = ["#fe9b72", "#fec971", " #00d4fe", "#b693fd", "#e4ee91"];
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const select: authenticatedUser = useSelector(
     (state: any) => state.authSlicer
@@ -40,16 +42,24 @@ function NewNoteBar(): JSX.Element {
       .then((resp: boolean) => {
         if (resp) {
           dispatch(addNote(noteData));
-
-          setNoteData({
-            id: "",
-            uid: select.uid,
-            noteTitle: "",
-            noteDescription: "",
-            color: "",
-            createdAt: new Date().toString(),
-          });
         }
+        setNoteData({
+          uid: select.uid,
+          noteTitle: "",
+          noteDescription: "",
+          color: "",
+          createdAt: new Date().toString(),
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const signoutHandler = () => {
+    googleSignout()
+      .then((res) => {
+        navigate("/");
       })
       .catch((err) => {
         console.log(err);
@@ -71,6 +81,7 @@ function NewNoteBar(): JSX.Element {
             id="noteTitle"
             placeholder="Enter title"
             className="form-control"
+            defaultValue={noteData.noteTitle ? noteData.noteTitle : ""}
             onChange={changeNoteHandler}
           />
         </div>
@@ -89,6 +100,9 @@ function NewNoteBar(): JSX.Element {
             rows={5}
             className="form-control"
             placeholder="Enter description"
+            defaultValue={
+              noteData.noteDescription ? noteData.noteDescription : ""
+            }
             onChange={changeNoteHandler}
           ></textarea>
         </div>
@@ -133,6 +147,16 @@ function NewNoteBar(): JSX.Element {
           </button>
         </div>
       </form>
+
+      <div>
+        <button
+          className="button-main"
+          style={{ width: "100%" }}
+          onClick={signoutHandler}
+        >
+          Signout
+        </button>
+      </div>
     </div>
   );
 }

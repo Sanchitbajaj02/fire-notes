@@ -41,15 +41,17 @@ function Note({ note }: { note: SingleNote }) {
     return `${hrs}:${min} ${amPm} ${day} ${month}`;
   };
 
-  const deleteANote = (uid: string) => {
-    deleteNoteFromDB(uid)
-      .then((resp) => {
-        console.log(resp);
-        if (resp) {
-          dispatch(deleteNote(uid));
-        }
-      })
-      .catch((err) => console.log(err));
+  const deleteANote = (id: string) => {
+    if (id !== "" && id !== undefined) {
+      deleteNoteFromDB(id)
+        .then((resp) => {
+          // console.log(resp);
+          if (resp) {
+            dispatch(deleteNote(id));
+          }
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   return (
@@ -70,7 +72,7 @@ function Note({ note }: { note: SingleNote }) {
         /> */}
         <button
           className="note-delete-button"
-          onClick={() => deleteANote(note.uid)}
+          onClick={() => deleteANote(note.id ? note.id : "")}
         >
           <i className="fa-solid fa-trash fa-lg"></i>
         </button>

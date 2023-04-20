@@ -11,10 +11,12 @@ const notesSlice = createSlice({
   name: "notesslice",
   initialState,
   reducers: {
-    getNotes(_, action: PayloadAction<SingleNote[]>) {
-      return {
-        notes: action.payload,
-      };
+    getNotes(
+      state: NotesState = initialState,
+      action: PayloadAction<SingleNote[]>
+    ) {
+      state.notes = action.payload;
+      return state;
     },
     addNote(
       state: NotesState = initialState,
@@ -27,10 +29,12 @@ const notesSlice = createSlice({
       state: NotesState = initialState,
       action: PayloadAction<string>
     ) {
-      state.notes.filter((note) => note.uid === action.payload);
+      const id = action.payload;
 
-      console.log(state.notes);
-      return state;
+      const tempState = state.notes.filter((note) => note.id !== id);
+
+      console.log(tempState);
+      state.notes = tempState;
     },
     updateNote(
       state: NotesState = initialState,
