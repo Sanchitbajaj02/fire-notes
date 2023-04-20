@@ -27,11 +27,17 @@ const authSlice = createSlice({
       state.uid = action.payload.uid;
       state.emailID = action.payload.emailID;
     },
+
+    unAuthUser(state: authenticatedUser = initialState) {
+      state.id = "";
+      state.uid = "";
+      state.emailID = "";
+    },
   },
 });
 
 // for dispatch
-export const { authUser } = authSlice.actions;
+export const { authUser, unAuthUser } = authSlice.actions;
 
 // for configureStore
 export default authSlice.reducer;

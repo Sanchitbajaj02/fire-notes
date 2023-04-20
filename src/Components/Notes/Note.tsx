@@ -43,6 +43,7 @@ function Note({ note }: { note: SingleNote }) {
 
   const deleteANote = (id: string) => {
     if (id !== "" && id !== undefined) {
+      console.log(id);
       deleteNoteFromDB(id)
         .then((resp) => {
           // console.log(resp);
@@ -65,14 +66,11 @@ function Note({ note }: { note: SingleNote }) {
       />
       <div className="note-footer">
         <p>{formatDate(note.createdAt)}</p>
-        {/* <img
-          src={deleteIcon}
-          alt="DELETE"
-          
-        /> */}
+
         <button
+          type="reset"
           className="note-delete-button"
-          onClick={() => deleteANote(note.id ? note.id : "")}
+          onClick={() => deleteANote(!!note.id ? note.id : "")}
         >
           <i className="fa-solid fa-trash fa-lg"></i>
         </button>

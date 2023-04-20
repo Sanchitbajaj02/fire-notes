@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { authenticatedUser, SingleNote } from "../../@types/index.d";
 import { useSelector, useDispatch } from "react-redux";
-import { addNote } from "../../Redux/noteSlice";
+import { addNote, emptyNotes } from "../../Redux/noteSlice";
+import { unAuthUser } from "../../Redux/authSlice";
 import { addNoteToDB, googleSignout } from "../../Firebase/firebaseFunctions";
 
 function NewNoteBar(): JSX.Element {
@@ -43,12 +44,15 @@ function NewNoteBar(): JSX.Element {
         if (resp) {
           dispatch(addNote(noteData));
         }
-        setNoteData({
-          uid: select.uid,
-          noteTitle: "",
-          noteDescription: "",
-          color: "",
-          createdAt: new Date().toString(),
+        setNoteData((prev) => {
+          console.log("reset state");
+
+          return {
+            ...prev,
+            noteTitle: "",
+            noteDescription: "",
+            color: "",
+          };
         });
       })
       .catch((err) => {
@@ -59,6 +63,9 @@ function NewNoteBar(): JSX.Element {
   const signoutHandler = () => {
     googleSignout()
       .then((res) => {
+        localStorage.clear();
+        dispatch(unAuthUser());
+        dispatch(emptyNotes());
         navigate("/");
       })
       .catch((err) => {
@@ -81,7 +88,7 @@ function NewNoteBar(): JSX.Element {
             id="noteTitle"
             placeholder="Enter title"
             className="form-control"
-            defaultValue={noteData.noteTitle ? noteData.noteTitle : ""}
+            value={noteData.noteTitle ? noteData.noteTitle : ""}
             onChange={changeNoteHandler}
           />
         </div>
@@ -100,9 +107,7 @@ function NewNoteBar(): JSX.Element {
             rows={5}
             className="form-control"
             placeholder="Enter description"
-            defaultValue={
-              noteData.noteDescription ? noteData.noteDescription : ""
-            }
+            value={noteData.noteDescription ? noteData.noteDescription : ""}
             onChange={changeNoteHandler}
           ></textarea>
         </div>
