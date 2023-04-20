@@ -1,8 +1,12 @@
-export type UserDataType = {
-  id?: string;
-  uid?: string;
+export type UserData = {
   emailID: string;
-  password?: string;
+  password: string;
+};
+
+export type authenticatedUser = {
+  id: string;
+  uid: string;
+  emailID: string;
 };
 
 export type SingleNote = {

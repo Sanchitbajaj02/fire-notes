@@ -1,60 +1,37 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-import { userRegister, userLogin } from "../Firebase/firebaseFunctions";
+// import { userRegister, userLogin } from "../Firebase/firebaseFunctions";
 
-import { UserDataType } from "../@types/index.d";
+import { authenticatedUser } from "../@types/index.d";
 
-const initialState: UserDataType = {
-  id: "",
-  uid: "",
-  emailID: "",
-  password: "",
-};
+const idSession = sessionStorage.getItem("id");
+const uidSession = sessionStorage.getItem("uid");
+const emailIDSession = sessionStorage.getItem("emailID");
 
-const registerUser = (
-  state: UserDataType = initialState,
-  action: PayloadAction<UserDataType>
-) => {
-  const userData = action.payload;
-
-  userRegister(userData)
-    .then((resp) => {
-      console.log(resp);
-      // return resp;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
-
-const loginUser = (
-  state: UserDataType = initialState,
-  action: PayloadAction<UserDataType>
-) => {
-  const userData = action.payload;
-
-  userLogin(userData)
-    .then((resp) => {
-      console.log(resp);
-      // return resp;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+const initialState: authenticatedUser = {
+  id: idSession || "",
+  uid: uidSession || "",
+  emailID: emailIDSession || "",
 };
 
 const authSlice = createSlice({
   name: "authSlice",
   initialState,
   reducers: {
-    register: registerUser,
-    login: loginUser,
+    authUser(
+      state: authenticatedUser,
+      action: PayloadAction<authenticatedUser>
+    ) {
+      state.id = action.payload.id;
+      state.uid = action.payload.uid;
+      state.emailID = action.payload.emailID;
+    },
   },
 });
 
 // for dispatch
-export const { register, login } = authSlice.actions;
+export const { authUser } = authSlice.actions;
 
 // for configureStore
 export default authSlice.reducer;

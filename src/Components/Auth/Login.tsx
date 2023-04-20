@@ -1,14 +1,16 @@
 import "./auth.css";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { UserDataType } from "../../@types";
-import { login } from "../../Redux/authSlice";
+import { authenticatedUser, UserData } from "../../@types";
+import { authUser } from "../../Redux/authSlice";
+import { userLogin } from "../../Firebase/firebaseFunctions";
 
 function Login(): JSX.Element {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [userData, setUserData] = useState<UserDataType>({
+  const [userData, setUserData] = useState<UserData>({
     emailID: "",
     password: "",
   });
@@ -26,7 +28,24 @@ function Login(): JSX.Element {
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    dispatch(login(userData));
+    console.log(userData);
+
+    userLogin(userData)
+      .then((res: authenticatedUser) => {
+        console.log(res);
+
+        if (res.id !== "" && res.uid !== "" && res.emailID !== "") {
+          sessionStorage.setItem("id", res.id ? res.id : "");
+          sessionStorage.setItem("uid", res.uid ? res.uid : "");
+          sessionStorage.setItem("emailID", res.emailID ? res.emailID : "");
+
+          dispatch(authUser(res));
+          navigate("/notes");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (

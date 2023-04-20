@@ -11,3 +11,5 @@ const store = configureStore({
 });
 
 export default store;
+
+export const RootState = typeof store.getState;

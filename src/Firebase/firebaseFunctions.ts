@@ -9,18 +9,10 @@ import {
 import { collection, doc, addDoc, getDoc, deleteDoc } from "firebase/firestore";
 
 import { db, auth } from "./firebase.config";
-import { UserDataType, SingleNote } from "../@types/index.d";
+import { UserData, authenticatedUser, SingleNote } from "../@types/index.d";
 
-import { encodePassword, decodePassword } from "./auth";
-
-const userRegister = async (userData: UserDataType): Promise<UserDataType> => {
+const userRegister = async (userData: UserData): Promise<authenticatedUser> => {
   try {
-    let combinedState: UserDataType = {
-      id: "",
-      uid: "",
-      emailID: "",
-      password: "",
-    };
     if (userData?.emailID === undefined || userData?.password === undefined) {
       throw new Error("Fields are required");
     }
@@ -33,30 +25,22 @@ const userRegister = async (userData: UserDataType): Promise<UserDataType> => {
     if (signUpResult.user) {
       const addDocRef = collection(db, "users");
 
-      const hashPass = await encodePassword(userData?.password);
-
-      if (hashPass instanceof Error) {
-        throw new Error(hashPass.message);
-      }
-
       const addSnapshot = await addDoc(addDocRef, {
         emailID: signUpResult.user.email,
-        password: hashPass,
         uid: signUpResult.user.uid,
       });
 
       if (addSnapshot && addSnapshot.id) {
-        combinedState = {
+        return {
           id: addSnapshot.id,
           uid: signUpResult.user.uid,
           emailID: signUpResult.user.email ? signUpResult.user.email : "",
         };
       }
-
-      return combinedState;
     }
   } catch (error: any) {
     console.log(error);
+    alert(error.message);
     // IN_PROGRESS: add return after testing
     // return error;
   }
@@ -65,19 +49,11 @@ const userRegister = async (userData: UserDataType): Promise<UserDataType> => {
     id: "",
     uid: "",
     emailID: "",
-    password: "",
   };
 };
 
-const userLogin = async (userData: UserDataType): Promise<UserDataType> => {
+const userLogin = async (userData: UserData): Promise<authenticatedUser> => {
   try {
-    let combinedState: UserDataType = {
-      id: "",
-      uid: "",
-      emailID: "",
-      password: "",
-    };
-
     if (userData?.emailID === undefined || userData?.password === undefined) {
       throw new Error("Username is required");
     }
@@ -91,34 +67,27 @@ const userLogin = async (userData: UserDataType): Promise<UserDataType> => {
       const docRef = doc(db, "users", signInResult.user.uid);
       const docSnapshot = await getDoc(docRef);
 
-      const hashedPass = docSnapshot.data()?.password;
+      console.log("line 70", docSnapshot.id);
 
-      const matchedResult = await decodePassword(
-        userData?.password,
-        hashedPass
-      );
-
-      if (docSnapshot && docSnapshot.exists() && matchedResult) {
-        combinedState = {
+      if (docSnapshot.id) {
+        return {
           id: docSnapshot.id,
           uid: signInResult.user.uid,
           emailID: signInResult.user.email ? signInResult.user.email : "",
         };
       }
-
-      return combinedState;
     }
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
+    alert(error.message);
+
     // IN_PROGRESS: add return after testing
-    // return error;
   }
 
   return {
     id: "",
     uid: "",
     emailID: "",
-    password: "",
   };
 };
 
@@ -196,7 +165,22 @@ const deleteNoteFromDB = async (tempNoteID: string) => {
   }
 };
 
-// const getNotesFromDBByuid = async (uid: string) => {};
+const getNotesFromDBByuid = async (uid: string) => {
+  try {
+    const docRef = doc(db, "notes", uid);
+
+    const docSnapshot = await getDoc(docRef);
+
+    if (docSnapshot && docSnapshot.exists()) {
+      return {
+        ...docSnapshot.data(),
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    // IN_PROGRESS: add return after testing
+  }
+};
 
 export {
   userRegister,
@@ -205,6 +189,7 @@ export {
   googleSignout,
   addNoteToDB,
   deleteNoteFromDB,
+  getNotesFromDBByuid,
 };
 
 /*

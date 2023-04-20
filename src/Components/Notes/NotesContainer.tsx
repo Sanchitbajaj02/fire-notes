@@ -5,9 +5,7 @@ function NotesContainer() {
   return (
     <div className="note-container">
       <h2>Notes</h2>
-      <div className="note-container_notes custom-scroll">
-        <Note />
-      </div>
+      <div className="note-container_notes custom-scroll">{/* <Note /> */}</div>
     </div>
   );
 }
