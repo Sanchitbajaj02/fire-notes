@@ -25,9 +25,11 @@ const notesSlice = createSlice({
     },
     deleteNote(
       state: NotesState = initialState,
-      action: PayloadAction<SingleNote>
+      action: PayloadAction<string>
     ) {
-      state.notes.filter((note) => note.uid !== action.payload.uid);
+      state.notes.filter((note) => note.uid === action.payload);
+
+      console.log(state.notes);
       return state;
     },
     updateNote(

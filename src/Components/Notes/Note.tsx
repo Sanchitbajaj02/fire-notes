@@ -1,10 +1,13 @@
 import React from "react";
 
 import { SingleNote } from "../../@types/index.d";
+import { useDispatch } from "react-redux";
+import { deleteNote } from "../../Redux/noteSlice";
+import { deleteNoteFromDB } from "../../Firebase/firebaseFunctions";
 
-let timer: number = 500,
-  timeout: any;
 function Note({ note }: { note: SingleNote }) {
+  const dispatch = useDispatch();
+
   const formatDate = (value: any) => {
     if (!value) return "";
 
@@ -38,30 +41,39 @@ function Note({ note }: { note: SingleNote }) {
     return `${hrs}:${min} ${amPm} ${day} ${month}`;
   };
 
-  const debounce = (func: any) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(func, timer);
-  };
-
-  const updateText = (text: string, id: string) => {
-    // debounce(() => props.updateText(text, id));
+  const deleteANote = (uid: string) => {
+    deleteNoteFromDB(uid)
+      .then((resp) => {
+        console.log(resp);
+        if (resp) {
+          dispatch(deleteNote(uid));
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
     <div className="note" style={{ backgroundColor: note.color }}>
+      <input type="text" defaultValue={note.noteTitle} className="note-title" />
+      <hr color="black" />
       <textarea
-        className="note_text"
-        defaultValue={note.noteTitle}
+        className="note-description"
+        defaultValue={note.noteDescription}
         onChange={(event) => console.log("update")}
       />
-      <div className="note_footer">
+      <div className="note-footer">
         <p>{formatDate(note.createdAt)}</p>
         {/* <img
           src={deleteIcon}
           alt="DELETE"
           
         /> */}
-        <button onClick={() => console.log("delete")}>delete</button>
+        <button
+          className="note-delete-button"
+          onClick={() => deleteANote(note.uid)}
+        >
+          <i className="fa-solid fa-trash fa-lg"></i>
+        </button>
       </div>
     </div>
   );

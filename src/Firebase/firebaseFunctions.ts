@@ -159,15 +159,18 @@ const addNoteToDB = async (tempNote: SingleNote): Promise<boolean> => {
   return false;
 };
 
-const deleteNoteFromDB = async (tempNoteID: string) => {
+const deleteNoteFromDB = async (uid: string) => {
   try {
-    const docRef = doc(db, "notes", tempNoteID);
+    const docRef = doc(db, "notes", uid);
 
     await deleteDoc(docRef);
+
+    return true;
   } catch (error) {
     console.log(error);
     // IN_PROGRESS: add return after testing
   }
+  return false;
 };
 
 const getNotesFromDBByuid = async (uid: string) => {
@@ -191,7 +194,7 @@ const getNotesFromDBByuid = async (uid: string) => {
 
     if (docSnapshot && docSnapshot.docs.length > 0) {
       docSnapshot.forEach((doc) => {
-        console.log(doc.data());
+        // console.log(doc.data());
 
         if (doc.data().uid === uid) {
           const tempNote: SingleNote = {
