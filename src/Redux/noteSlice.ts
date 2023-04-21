@@ -36,12 +36,6 @@ const notesSlice = createSlice({
       console.log(tempState);
       state.notes = tempState;
     },
-    updateNote(
-      state: NotesState = initialState,
-      action: PayloadAction<SingleNote>
-    ) {
-      // write the state logic to replace the note in the state where it matches with the action.payload.uid
-    },
 
     emptyNotes(state: NotesState = initialState) {
       state.notes = [];
