@@ -141,7 +141,12 @@ const googleSignout = () => {
   return signOut(auth);
 };
 
-const addNoteToDB = async (tempNote: SingleNote): Promise<boolean> => {
+const addNoteToDB = async (
+  tempNote: SingleNote
+): Promise<{
+  id: string;
+  status: boolean;
+}> => {
   try {
     const docRef = collection(db, "notes");
 
@@ -150,13 +155,19 @@ const addNoteToDB = async (tempNote: SingleNote): Promise<boolean> => {
     });
 
     if (addSnapshot && addSnapshot.id) {
-      return true;
+      return {
+        id: addSnapshot.id,
+        status: true,
+      };
     }
   } catch (error) {
     console.log(error);
     // IN_PROGRESS: add return after testing
   }
-  return false;
+  return {
+    id: "",
+    status: false,
+  };
 };
 
 const deleteNoteFromDB = async (id: string): Promise<boolean> => {

@@ -40,9 +40,14 @@ function NewNoteBar(): JSX.Element {
     console.log(noteData);
 
     addNoteToDB(noteData)
-      .then((resp: boolean) => {
-        if (resp) {
-          dispatch(addNote(noteData));
+      .then((resp: { id: string; status: boolean }) => {
+        if (resp.status) {
+          dispatch(
+            addNote({
+              ...noteData,
+              id: resp.id,
+            })
+          );
         }
         setNoteData((prev) => {
           console.log("reset state");
