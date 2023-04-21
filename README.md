@@ -13,6 +13,26 @@ Fire Notes is a note-taking application that uses Firebase as its backend databa
 - Firebase Firestore
 - Redux Toolkit
 
+## Installation guide
+
+Clone this repository using the below link
+
+```bash
+git clone https://github.com/Sanchitbajaj02/fire-notes.git
+```
+
+After cloning into your local machine, open the terminal and type the following command to install the dependencies
+
+```bash
+npm install
+```
+
+Now, to start the application, type this command:
+
+```bash
+npm start
+```
+
 ## Screenshots
 
 ![Home Page](.github/images/homepage.png)
